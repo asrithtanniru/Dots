@@ -2,7 +2,9 @@
 
 A tiny Android app that draws a minimalist dot-grid wallpaper and sets it as your **lock screen**, then redraws it every day. Built for a Pixel 7a, sideloaded, personal use. No internet permission, no analytics.
 
-![Year, Months, Life and Goal modes](preview-all.png)
+![Year, Months, Life and Goal on a Pixel 7a lock screen](docs/lockscreens.png)
+
+Real captures from a Pixel 7a: Year grid, Year months, Life and a Goal.
 
 ## Features
 
