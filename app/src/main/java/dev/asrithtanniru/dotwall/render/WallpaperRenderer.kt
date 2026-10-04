@@ -86,13 +86,13 @@ object WallpaperRenderer {
             val footer = if (finished) GridMath.finishedProgress(goal) else GridMath.goalProgress(goal, today)
             grid(
                 band, GridMath.goalCounts(goal, today), today, cols = GridMath.GOAL_COLS, maxPitch = 58f,
-                header = goal.title.takeIf { look.showGoalTitle }, footer = footer,
+                header = goal.title.takeIf { look.showGoalTitle }, footer = footer, anchorTop = true,
             )
         }
 
         fun grid(
             band: RectF, counts: DotCounts, today: LocalDate, cols: Int?, maxPitch: Float,
-            header: String?, footer: ProgressText,
+            header: String?, footer: ProgressText, anchorTop: Boolean = false,
         ) {
             val showFooter = look.showFooter
             val headH = if (header != null) LABEL_GAP else 0f
@@ -106,7 +106,8 @@ object WallpaperRenderer {
             val tw = fit.cols * pitch
             val th = fit.rows * pitch
             val ox = band.left + (gw - tw) / 2
-            val oy = band.top + (band.height() - (th + headH + footH)) / 2 + headH
+            // Short grids hug the top of the band so they stay clear of the fingerprint area.
+            val oy = if (anchorTop) band.top + headH else band.top + (band.height() - (th + headH + footH)) / 2 + headH
 
             for (i in 0 until counts.total) {
                 val cx = ox + (i % fit.cols + 0.5f) * pitch
