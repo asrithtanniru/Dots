@@ -1,6 +1,18 @@
 # Dots
 
-Lock-screen progress wallpaper for Android (built for a Pixel 7a). Draws a minimalist dot grid and sets it as the lock screen, then redraws it every day. Three modes: **Year**, **Life**, **Goal**. No internet permission, no analytics.
+A tiny Android app that draws a minimalist dot-grid wallpaper and sets it as your **lock screen**, then redraws it every day. Built for a Pixel 7a, sideloaded, personal use. No internet permission, no analytics.
+
+![Year, Months, Life and Goal modes](preview-all.png)
+
+## Features
+
+- **Year**: one dot per day, as a grid or as 12 month blocks. Today is in the accent color.
+- **Life**: one dot per week of life, 52 per row.
+- **Goal**: one dot per day from a start date to a deadline. Save several goals, one active. After the deadline it shows `Done` or `Missed` for 3 days, then falls back to Year.
+- Live preview with ghost shapes for the clock, fingerprint and shortcuts, so you can see clearances.
+- Accent presets and custom hex, charcoal or pure black background, circle or rounded-square dots, two densities, adjustable placement band.
+- Redraws shortly after midnight, after reboot, and when the time, date or time zone changes.
+- Kotlin, Jetpack Compose and plain `Canvas`. Release APK is about 2.7 MB.
 
 `PLAN.md` is the spec. `render.py` is the visual reference the Kotlin renderer was ported from.
 
