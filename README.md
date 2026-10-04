@@ -54,3 +54,7 @@ Debug builds show **Save PNG to Pictures**. It writes a full-size render to `Pic
 - Changing settings does not touch the wallpaper until Apply (or the next daily run). Opening the app only re-applies when the day changed.
 - Wallpaper is drawn at the display's portrait size; a different device needs no change, but the ghost overlay is tuned to a Pixel 7a.
 - Week start (Monday/Sunday) only affects the Months style.
+
+## Fonts
+
+Wallpaper text uses Google Sans Flex (SIL OFL 1.1, license in `licenses/`), the Pixel system look. `app/src/main/res/font/` holds two static, Latin-only subsets (Medium and SemiBold, about 47 KB each) cut from the variable font with fonttools. Falls back to the stock sans-serif if loading fails.

@@ -14,6 +14,7 @@ import dev.asrithtanniru.dotwall.data.AppliedState
 import dev.asrithtanniru.dotwall.data.SettingsRepo
 import dev.asrithtanniru.dotwall.model.RenderSpec
 import dev.asrithtanniru.dotwall.render.ScreenSize
+import dev.asrithtanniru.dotwall.render.WallpaperFonts
 import dev.asrithtanniru.dotwall.render.WallpaperRenderer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -32,13 +33,14 @@ import java.time.LocalDate
 class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = SettingsRepo(app)
     val screen = ScreenSize.portrait(app)
+    private val fonts = WallpaperFonts.load(app)
 
     /** Null until DataStore has loaded. */
     val spec: StateFlow<RenderSpec?> = repo.spec.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val preview: StateFlow<Bitmap?> = spec.filterNotNull()
         .debounce(100)
-        .mapLatest { s -> withContext(Dispatchers.Default) { WallpaperRenderer.render(s, screen, LocalDate.now()) } }
+        .mapLatest { s -> withContext(Dispatchers.Default) { WallpaperRenderer.render(s, screen, LocalDate.now(), fonts) } }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val applier = WallpaperApplier(app)
@@ -75,7 +77,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             val s = spec.value ?: return@launch
             val ok = withContext(Dispatchers.IO) {
                 runCatching {
-                    val bmp = WallpaperRenderer.render(s, screen, LocalDate.now())
+                    val bmp = WallpaperRenderer.render(s, screen, LocalDate.now(), fonts)
                     val resolver = getApplication<Application>().contentResolver
                     val values = ContentValues().apply {
                         put(MediaStore.Images.Media.DISPLAY_NAME, "dots-${s.mode.name.lowercase()}-${System.currentTimeMillis()}.png")

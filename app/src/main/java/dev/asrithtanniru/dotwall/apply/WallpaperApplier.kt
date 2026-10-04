@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import dev.asrithtanniru.dotwall.data.SettingsRepo
 import dev.asrithtanniru.dotwall.model.ApplyTarget
 import dev.asrithtanniru.dotwall.render.ScreenSize
+import dev.asrithtanniru.dotwall.render.WallpaperFonts
 import dev.asrithtanniru.dotwall.render.WallpaperRenderer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
@@ -17,12 +18,13 @@ class WallpaperApplier(context: Context) {
     private val app = context.applicationContext
     private val repo = SettingsRepo(app)
     private val size = ScreenSize.portrait(app)
+    private val fonts = WallpaperFonts.load(app)
 
     private val core = ApplyCore<Bitmap>(
         loadSpec = repo::currentSpec,
         loadApplied = repo::currentApplied,
         markApplied = repo::markApplied,
-        render = { spec, today -> withContext(Dispatchers.Default) { WallpaperRenderer.render(spec, size, today) } },
+        render = { spec, today -> withContext(Dispatchers.Default) { WallpaperRenderer.render(spec, size, today, fonts) } },
         set = { bmp, target ->
             withContext(Dispatchers.IO) {
                 val flags = when (target) {

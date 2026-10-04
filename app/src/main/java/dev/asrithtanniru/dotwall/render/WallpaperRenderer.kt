@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import android.graphics.Typeface
 import android.util.Size
 import dev.asrithtanniru.dotwall.model.DotShape
 import dev.asrithtanniru.dotwall.model.Goal
@@ -28,10 +27,12 @@ object WallpaperRenderer {
     private const val LABEL_GAP = 56f
     private const val SEPARATOR = "  ·  "
 
-    private val medium: Typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
-    private val semibold: Typeface = Typeface.create(Typeface.DEFAULT, 600, false)
-
-    fun render(spec: RenderSpec, size: Size, today: LocalDate): Bitmap {
+    fun render(
+        spec: RenderSpec,
+        size: Size,
+        today: LocalDate,
+        fonts: WallpaperFonts = WallpaperFonts.System,
+    ): Bitmap {
         val bmp = Bitmap.createBitmap(size.width, size.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bmp)
         canvas.drawColor(spec.look.background.argb)
@@ -44,7 +45,7 @@ object WallpaperRenderer {
             p.bottom * size.height,
         )
         val look = spec.look
-        val painter = Painter(canvas, look)
+        val painter = Painter(canvas, look, fonts)
 
         when (val r = GridMath.resolve(spec, today)) {
             Resolved.Year -> if (spec.yearStyle == YearStyle.Months) {
@@ -66,7 +67,7 @@ object WallpaperRenderer {
         return bmp
     }
 
-    private class Painter(private val canvas: Canvas, private val look: Look) {
+    private class Painter(private val canvas: Canvas, private val look: Look, private val fonts: WallpaperFonts) {
         private val dot = Paint(Paint.ANTI_ALIAS_FLAG)
         private val text = Paint(Paint.ANTI_ALIAS_FLAG)
         private val rect = RectF()
@@ -121,7 +122,7 @@ object WallpaperRenderer {
 
             val mid = band.centerX()
             if (header != null) {
-                text.typeface = medium
+                text.typeface = fonts.medium
                 text.textSize = 36f
                 text.color = TITLE
                 text.textAlign = Paint.Align.CENTER
@@ -131,7 +132,7 @@ object WallpaperRenderer {
         }
 
         fun footerText(footer: ProgressText, centerX: Float, baseline: Float) {
-            text.typeface = medium
+            text.typeface = fonts.medium
             text.textSize = 32f
             text.textAlign = Paint.Align.LEFT
             val lw = text.measureText(footer.left)
@@ -158,7 +159,7 @@ object WallpaperRenderer {
             val total = rowsM * blockH + (rowsM - 1) * gapY
             val oy = band.top + ((band.height() - foot) - total) / 2
 
-            text.typeface = semibold
+            text.typeface = fonts.semibold
             text.textSize = 26f
             text.textAlign = Paint.Align.LEFT
             for (m in 0 until 12) {
