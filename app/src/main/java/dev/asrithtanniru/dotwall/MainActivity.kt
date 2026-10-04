@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.asrithtanniru.dotwall.model.Mode
+import dev.asrithtanniru.dotwall.ui.ApplyBar
 import dev.asrithtanniru.dotwall.ui.DotsColors
 import dev.asrithtanniru.dotwall.ui.GoalSettings
 import dev.asrithtanniru.dotwall.ui.LifeSettings
@@ -47,9 +48,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        vm.catchUp()
         setContent {
             val spec by vm.spec.collectAsState()
             val preview by vm.preview.collectAsState()
+            val applied by vm.applied.collectAsState()
             val context = LocalContext.current
             DotsTheme(accent = spec?.look?.accent?.let { Color(it) } ?: Color(0xFFD97757)) {
                 Column(
@@ -82,6 +85,15 @@ class MainActivity : ComponentActivity() {
                         }
                         LookSection(sp, vm::update)
                         PlacementSection(sp, vm::update)
+                        ApplyBar(applied) {
+                            vm.apply { ok ->
+                                Toast.makeText(
+                                    context,
+                                    if (ok) "Wallpaper applied" else "Could not set wallpaper",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            }
+                        }
                     }
                     if (BuildConfig.DEBUG) {
                         TextButton(onClick = {

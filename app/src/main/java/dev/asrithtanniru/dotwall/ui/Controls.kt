@@ -49,7 +49,6 @@ fun Section(title: String, modifier: Modifier = Modifier, content: @Composable (
             title.uppercase(Locale.ENGLISH),
             style = MaterialTheme.typography.labelMedium,
             color = DotsColors.Muted,
-            letterSpacing = androidx.compose.ui.unit.TextUnit.Unspecified,
         )
         content()
     }

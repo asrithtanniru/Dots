@@ -6,6 +6,11 @@ import android.graphics.Bitmap
 import android.provider.MediaStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import dev.asrithtanniru.dotwall.apply.Outcome
+import dev.asrithtanniru.dotwall.apply.Scheduler
+import dev.asrithtanniru.dotwall.apply.Trigger
+import dev.asrithtanniru.dotwall.apply.WallpaperApplier
+import dev.asrithtanniru.dotwall.data.AppliedState
 import dev.asrithtanniru.dotwall.data.SettingsRepo
 import dev.asrithtanniru.dotwall.model.RenderSpec
 import dev.asrithtanniru.dotwall.render.ScreenSize
@@ -35,6 +40,30 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         .debounce(100)
         .mapLatest { s -> withContext(Dispatchers.Default) { WallpaperRenderer.render(s, screen, LocalDate.now()) } }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    private val applier = WallpaperApplier(app)
+
+    val applied: StateFlow<AppliedState?> = repo.applied.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    /** Apply now, arm the daily run, report success. */
+    fun apply(onDone: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val ok = runCatching {
+                applier.apply(Trigger.Manual)
+                Scheduler.scheduleNext(getApplication())
+            }.isSuccess
+            onDone(ok)
+        }
+    }
+
+    /** Catch up after missed runs (battery saver, no receiver); no-op until the first manual apply. */
+    fun catchUp() {
+        viewModelScope.launch {
+            runCatching {
+                if (applier.apply(Trigger.AppOpen) == Outcome.Applied) Scheduler.scheduleNext(getApplication())
+            }
+        }
+    }
 
     fun update(transform: (RenderSpec) -> RenderSpec) {
         viewModelScope.launch { repo.update(transform) }
