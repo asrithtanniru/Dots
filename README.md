@@ -41,7 +41,7 @@ Goals: add several, choose one as active. After the deadline the footer shows `D
 
 ## Change placement when the clock style changes
 
-The Pixel lock-screen clock is large with no notifications and small with them. The default band (top 37.5%, bottom 90.5%, side 8.5%) sits below the large clock and At a Glance lines and above the bottom shortcuts. If your setup differs, move the **Top**, **Bottom** and **Side margin** sliders until the grid clears the ghost shapes, then Apply again.
+The Pixel lock-screen clock is large with no notifications and small with them. The default band (top 28%, bottom 87.5%, side 8.5%) sits below the clock and date line (weather lines off) and above the bottom shortcuts and charging text. If your setup differs, move the **Top**, **Bottom** and **Side margin** sliders until the grid clears the ghost shapes, then Apply again.
 
 ## Debug helper
 

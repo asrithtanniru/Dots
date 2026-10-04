@@ -28,8 +28,8 @@ data class Look(
 )
 
 data class Placement(
-    val top: Float = 0.375f,
-    val bottom: Float = 0.905f,
+    val top: Float = 0.28f,
+    val bottom: Float = 0.875f,
     val side: Float = 0.085f,
 )
 

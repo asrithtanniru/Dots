@@ -59,11 +59,9 @@ private fun GhostOverlay(modifier: Modifier) {
         fun bar(x: Float, top: Float, w: Float, h: Float) = drawRoundRect(
             Ghost, Offset(x * sx, top * sy), Size(w * sx, h * sy), CornerRadius(h * sy / 2),
         )
-        // Clock, date line, At a Glance lines.
+        // Clock and date line (At a Glance weather lines are switched off).
         bar(88f, 190f, 520f, 200f)
         bar(86f, 500f, 560f, 56f)
-        bar(86f, 650f, 540f, 56f)
-        bar(86f, 740f, 420f, 48f)
         // Fingerprint and bottom shortcuts.
         drawCircle(Ghost, 100f * sx, Offset(540f * sx, 1715f * sy))
         drawCircle(Ghost, 62f * sx, Offset(105f * sx, 2252f * sy))
