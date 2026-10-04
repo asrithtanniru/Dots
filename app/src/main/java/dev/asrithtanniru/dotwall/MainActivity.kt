@@ -30,7 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import dev.asrithtanniru.dotwall.model.Mode
 import dev.asrithtanniru.dotwall.ui.DotsColors
+import dev.asrithtanniru.dotwall.ui.GoalSettings
+import dev.asrithtanniru.dotwall.ui.LifeSettings
+import dev.asrithtanniru.dotwall.ui.LookSection
+import dev.asrithtanniru.dotwall.ui.ModeSwitcher
+import dev.asrithtanniru.dotwall.ui.PlacementSection
+import dev.asrithtanniru.dotwall.ui.YearSettings
 import dev.asrithtanniru.dotwall.ui.DotsTheme
 import dev.asrithtanniru.dotwall.ui.Preview
 
@@ -65,6 +72,16 @@ class MainActivity : ComponentActivity() {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Text("Lock-screen ghosts", color = DotsColors.Muted, modifier = Modifier.weight(1f))
                         Switch(checked = ghost, onCheckedChange = { ghost = it })
+                    }
+                    spec?.let { sp ->
+                        ModeSwitcher(sp.mode) { m -> vm.update { it.copy(mode = m) } }
+                        when (sp.mode) {
+                            Mode.Year -> YearSettings(sp, vm::update)
+                            Mode.Life -> LifeSettings(sp, vm::update)
+                            Mode.Goal -> GoalSettings(sp, vm::update)
+                        }
+                        LookSection(sp, vm::update)
+                        PlacementSection(sp, vm::update)
                     }
                     if (BuildConfig.DEBUG) {
                         TextButton(onClick = {
